@@ -60,12 +60,15 @@ const navItems = [
 const store = {
   name: 'Prasad Store',
   address: 'Champasari, Nivedita Road, Siliguri, West Bengal, India',
-  phone: '+91 00000 00000',
-  email: 'prasadstore@example.com',
-  whatsapp: '910000000000',
+  phone: '+91 9563158383',
+  email: 'prasadankit3151@gmail.com',
+  whatsapp: '919932682063',
   mapsUrl: 'https://maps.app.goo.gl/KaDMQDvZjifZ8Dn78',
   mapEmbedUrl: 'https://www.google.com/maps?q=26.7362803,88.4169546&z=18&output=embed'
 };
+
+const whatsappMessage = encodeURIComponent('Hello Prasad Store, I want to ask about grocery prices.');
+const whatsappUrl = `https://wa.me/${store.whatsapp}?text=${whatsappMessage}`;
 
 const currency = new Intl.NumberFormat('en-IN', {
   style: 'currency',
@@ -147,7 +150,7 @@ function App() {
       </main>
       <Footer goTo={goTo} />
       <a
-        href={`https://wa.me/${store.whatsapp}?text=Hello%20Prasad%20Store%2C%20I%20want%20to%20ask%20about%20grocery%20prices.`}
+        href={whatsappUrl}
         target="_blank"
         rel="noreferrer"
         aria-label="Chat on WhatsApp"
@@ -470,11 +473,12 @@ function ContactPage() {
         <div className="mt-8 grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
           <div className="grid gap-4">
             <ContactCard icon={Store} label="Store Name" value={store.name} />
-            <ContactCard icon={MapPin} label="Address" value={store.address} />
-            <ContactCard icon={Phone} label="Phone" value={store.phone} />
-            <ContactCard icon={Mail} label="Email" value={store.email} />
+            <ContactCard icon={MapPin} label="Address" value={store.address} href={store.mapsUrl} />
+            <ContactCard icon={Phone} label="Phone" value={store.phone} href={`tel:${store.phone.replace(/\s/g, '')}`} />
+            <ContactCard icon={MessageCircle} label="WhatsApp" value="+91 9932682063" href={whatsappUrl} />
+            <ContactCard icon={Mail} label="Email" value={store.email} href={`mailto:${store.email}`} />
             <a
-              href={`https://wa.me/${store.whatsapp}`}
+              href={whatsappUrl}
               target="_blank"
               rel="noreferrer"
               className="inline-flex items-center justify-center gap-2 rounded bg-[#25D366] px-5 py-4 font-extrabold text-white shadow-soft transition hover:brightness-95 focus-ring"
@@ -1141,9 +1145,16 @@ function MiniStat({ icon: Icon, title, text }) {
   );
 }
 
-function ContactCard({ icon: Icon, label, value }) {
+function ContactCard({ icon: Icon, label, value, href }) {
+  const CardTag = href ? 'a' : 'div';
+
   return (
-    <div className="flex gap-4 rounded bg-white p-5 shadow-card ring-1 ring-green-100">
+    <CardTag
+      href={href}
+      target={href?.startsWith('http') ? '_blank' : undefined}
+      rel={href?.startsWith('http') ? 'noreferrer' : undefined}
+      className="flex gap-4 rounded bg-white p-5 shadow-card ring-1 ring-green-100 transition hover:-translate-y-0.5 hover:shadow-soft focus-ring"
+    >
       <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded bg-brand-light text-brand-green">
         <Icon size={22} />
       </div>
@@ -1151,7 +1162,7 @@ function ContactCard({ icon: Icon, label, value }) {
         <div className="text-sm font-black uppercase tracking-normal text-slate-400">{label}</div>
         <div className="mt-1 font-extrabold leading-7 text-slate-800">{value}</div>
       </div>
-    </div>
+    </CardTag>
   );
 }
 
